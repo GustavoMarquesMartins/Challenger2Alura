@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class TratamentoException {
@@ -18,5 +19,10 @@ public class TratamentoException {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity erro500(SQLIntegrityConstraintViolationException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity error404(NoSuchElementException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
