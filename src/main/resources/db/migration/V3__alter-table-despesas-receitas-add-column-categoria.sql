@@ -1,0 +1,2 @@
+alter table receitas add column categoria enum("ALIMENTACAO","SAUDE","MORADIA","TRANSPORTE","EDUCACAO","LAZER","IMPREVISTOS","OUTRAS");
+alter table despesas add column categoria enum("ALIMENTACAO","SAUDE","MORADIA","TRANSPORTE","EDUCACAO","LAZER","IMPREVISTOS","OUTRAS");

@@ -2,6 +2,7 @@ package FinTrackAPI.com.br.FinTrackAPI.Model.Entity;
 
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import jakarta.persistence.*;
+import jdk.jfr.Enabled;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ public class Despesa {
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
+    @Enumerated(EnumType.STRING)
+    private Categoria categoria;
 
     public void atualizar(RequestDTO requestDTO) {
         if (requestDTO.descricao() != null || requestDTO.descricao().isBlank()) {
@@ -29,5 +32,6 @@ public class Despesa {
         if (requestDTO.data() != null) {
             this.data = requestDTO.data();
         }
+        this.categoria = requestDTO.categoria();
     }
 }

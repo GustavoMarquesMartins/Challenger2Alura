@@ -2,6 +2,8 @@ package FinTrackAPI.com.br.FinTrackAPI.Controller;
 
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/receitas")
@@ -29,8 +32,16 @@ public class ReceitaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ResponseDTO>> listagem(@PageableDefault(size = 10, sort = {"valor"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok().body(receitaServico.listagem(pageable));
+    public ResponseEntity<Page<ResponseDTO>> listagem(@PageableDefault(size = 10, sort = {"valor"}, direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(value = "categoria", required = false) Categoria categoria) {
+        Page<ResponseDTO> lista = (categoria != null) ? receitaServico.listagemPorCategoria(pageable, categoria) : receitaServico.listagem(pageable);
+        return ResponseEntity.ok().body(lista);
+    }
+
+    @GetMapping("/{ano}/{mes}")
+    public ResponseEntity<List<ResponseDTO>> listagem(
+            @PathVariable Integer ano,
+            @PathVariable Integer mes) {
+        return ResponseEntity.ok().body(receitaServico.listagemPorData(ano, mes));
     }
 
     @GetMapping("/{id}")

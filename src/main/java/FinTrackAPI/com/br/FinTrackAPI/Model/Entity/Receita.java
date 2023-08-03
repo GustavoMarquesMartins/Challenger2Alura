@@ -2,7 +2,9 @@ package FinTrackAPI.com.br.FinTrackAPI.Model.Entity;
 
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +12,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "receitas")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Receita {
 
     @Id
@@ -18,6 +22,8 @@ public class Receita {
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
+    @Enumerated(EnumType.STRING)
+    private Categoria categoria;
 
     public void atualizar(RequestDTO requestDTO) {
         if (requestDTO.descricao() != null || requestDTO.descricao().isBlank()) {
@@ -29,5 +35,12 @@ public class Receita {
         if (requestDTO.data() != null) {
             this.data = requestDTO.data();
         }
+        this.categoria = requestDTO.categoria();
+    }
+    public Receita(String descricao, BigDecimal valor, LocalDate data, Categoria categoria) {
+        this.descricao = descricao;
+        this.valor = valor;
+        this.data = data;
+        this.categoria = categoria;
     }
 }
