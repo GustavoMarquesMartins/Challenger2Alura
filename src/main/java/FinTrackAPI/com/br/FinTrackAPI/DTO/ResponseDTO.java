@@ -4,6 +4,7 @@ import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Despesa;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +16,6 @@ public record ResponseDTO(String descricao, BigDecimal valor, @JsonFormat(patter
     }
 
     public ResponseDTO(Despesa despesa) {
-        this(despesa.getDescricao(), despesa.getValor(), despesa.getData(),despesa.getCategoria());
+        this(despesa.getDescricao(), despesa.getValor(), despesa.getData(), despesa.getCategoria());
     }
 }
