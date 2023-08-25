@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 public interface DespesasRepository extends JpaRepository<Despesa, Long> {
-    Page<Despesa> findAllByCategoria(Pageable pageable, Categoria categoria);
+    List<Despesa> findAllByCategoria( Categoria categoria);
 
     @Query("SELECT D FROM Despesa D WHERE YEAR(D.data) = :ano and MONTH(D.data) = :mes")
     List<Despesa> findByData(Integer ano, Integer mes);

@@ -30,12 +30,12 @@ public class DespesaServico {
         return despesasRepository.save(modelMapper.map(requestDTO, Despesa.class));
     }
 
-    public Page<ResponseDTO> listagem(Pageable pageable) {
-        return despesasRepository.findAll(pageable).map(ResponseDTO::new);
+    public List<ResponseDTO> listagem() {
+        return despesasRepository.findAll().stream().map(ResponseDTO::new).collect(Collectors.toList());
     }
 
-    public Page<ResponseDTO> listagemPorCategoria(Pageable pageable, Categoria categoria) {
-        return despesasRepository.findAllByCategoria(pageable, categoria).map(ResponseDTO::new);
+    public List<ResponseDTO> listagemPorCategoria(Categoria categoria) {
+        return despesasRepository.findAllByCategoria(categoria).stream().map(ResponseDTO::new).collect(Collectors.toList());
     }
 
     public ResponseDTO detalhar(long id) {
@@ -56,7 +56,7 @@ public class DespesaServico {
         despesasRepository.deleteById(id);
     }
 
-    public List<ResponseDTO> listagemPorData(Integer ano,Integer mes) {
-        return despesasRepository.findByData(ano,mes).stream().map(receitas-> new ResponseDTO(receitas)).collect(Collectors.toList());
+    public List<ResponseDTO> listagemPorData(Integer ano, Integer mes) {
+        return despesasRepository.findByData(ano, mes).stream().map(receitas -> new ResponseDTO(receitas)).collect(Collectors.toList());
     }
 }

@@ -37,12 +37,12 @@ public class ReceitaServico {
         return receita;
     }
 
-    public Page<ResponseDTO> listagem(Pageable pageable) {
-        return receitaRepository.findAll(pageable).map(ResponseDTO::new);
+    public List<ResponseDTO> listagem() {
+        return receitaRepository.findAll().stream().map(ResponseDTO::new).collect(Collectors.toList());
     }
 
-    public Page<ResponseDTO> listagemPorCategoria(Pageable pageable, Categoria categoria) {
-        return receitaRepository.findAllByCategoria(pageable, categoria).map(ResponseDTO::new);
+    public List<ResponseDTO> listagemPorCategoria(Categoria categoria) {
+        return  receitaRepository.findAllByCategoria(categoria).stream().map(ResponseDTO::new).collect(Collectors.toList());
     }
 
     public ResponseDTO detalhar(long id) {

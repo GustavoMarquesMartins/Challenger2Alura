@@ -35,8 +35,8 @@ public class ReceitaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ResponseDTO>> listagem(@PageableDefault(size = 10, sort = {"valor"}, direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(value = "categoria", required = false) Categoria categoria) {
-        Page<ResponseDTO> lista = (categoria != null) ? receitaServico.listagemPorCategoria(pageable, categoria) : receitaServico.listagem(pageable);
+    public ResponseEntity<List<ResponseDTO>> listagem(@RequestParam(value = "categoria", required = false) Categoria categoria) {
+        List<ResponseDTO> lista = (categoria != null) ? receitaServico.listagemPorCategoria(categoria) : receitaServico.listagem();
         return ResponseEntity.ok().body(lista);
     }
 

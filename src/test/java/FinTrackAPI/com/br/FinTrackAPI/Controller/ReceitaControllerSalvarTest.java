@@ -5,13 +5,10 @@ import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
-import io.swagger.v3.core.util.Json;
-import org.apache.coyote.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +22,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.beans.BeanProperty;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureJsonTesters
 @AutoConfigureMockMvc
-class ReceitaControllerTest {
+class ReceitaControllerSalvarTest {
 
     @MockBean
     private ReceitaServico servico;
@@ -77,12 +69,15 @@ class ReceitaControllerTest {
                         )
         ).andReturn().getResponse();
 
-        //assert
+        //assert http 201
         Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 
-        //criando json final
+        //assert json
         var jsonFinalEsperado = responseDTO.write(new ResponseDTO("teste", new BigDecimal("1000.00"), data, Categoria.LAZER)).getJson();
         Assertions.assertThat(response.getContentAsString()).isEqualTo(jsonFinalEsperado);
 
+        //assert uri
+        var uri = response.getHeader("Location");
+        Assertions.assertThat(uri).isEqualTo("http://localhost/receitas/1");
     }
 }
