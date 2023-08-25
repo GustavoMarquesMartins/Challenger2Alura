@@ -21,8 +21,11 @@ import java.util.List;
 @RequestMapping("/receitas")
 public class ReceitaController {
 
-    @Autowired
     private ReceitaServico receitaServico;
+    @Autowired
+    public ReceitaController(ReceitaServico receitaServico) {
+        this.receitaServico = receitaServico;
+    }
 
     @PostMapping
     public ResponseEntity<ResponseDTO> salvar(@RequestBody RequestDTO requestDTO, UriComponentsBuilder uriBuilder) throws SQLIntegrityConstraintViolationException {

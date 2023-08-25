@@ -22,11 +22,14 @@ import java.util.stream.Collectors;
 @Service
 public class ReceitaServico {
 
-    @Autowired
     private ReceitaRepository receitaRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
-    private ModelMapper modelMapper;
+    public ReceitaServico(ReceitaRepository receitaRepository, ModelMapper modelMapper) {
+        this.receitaRepository = receitaRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public Receita salvar(RequestDTO requestDTO) throws SQLIntegrityConstraintViolationException {
         var dto = validarCategoria(requestDTO);
@@ -60,14 +63,14 @@ public class ReceitaServico {
         receitaRepository.deleteById(id);
     }
 
-    private RequestDTO validarCategoria(RequestDTO requestDTO) {
+    public RequestDTO validarCategoria(RequestDTO requestDTO) {
         if (requestDTO.categoria() == null) {
             return new RequestDTO(requestDTO);
         }
         return requestDTO;
     }
-    public List<ResponseDTO> listagemPorData(Integer ano,Integer mes) {
-        return receitaRepository.findByData(ano,mes).stream().map(receitas-> new ResponseDTO(receitas)).collect(Collectors.toList());
-    }
 
+    public List<ResponseDTO> listagemPorData(Integer ano, Integer mes) {
+        return receitaRepository.findByData(ano, mes).stream().map(receitas -> new ResponseDTO(receitas)).collect(Collectors.toList());
+    }
 }
