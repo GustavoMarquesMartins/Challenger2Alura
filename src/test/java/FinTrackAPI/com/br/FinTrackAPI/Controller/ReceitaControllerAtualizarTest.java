@@ -3,6 +3,8 @@ package FinTrackAPI.com.br.FinTrackAPI.Controller;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Repository.ReceitaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,50 +12,56 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-@AutoConfigureJsonTesters
 @AutoConfigureMockMvc
+@AutoConfigureJsonTesters
 @SpringBootTest
-class ReceitaControllerSalvarTest {
-
-    @Autowired
-    private JacksonTester<RequestDTO> jsonRequest;
-
-    @Autowired
-    private JacksonTester<ResponseDTO> jsonResponse;
+class ReceitaControllerAtualizarTest {
 
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ReceitaRepository repository;
+
+    @Autowired
+    private JacksonTester<RequestDTO> requestDTOJson;
+
     @Test
-    void salvar() throws Exception {
+    void deletar() throws Exception {
 
         //var
-        var receitaRequest = jsonRequest.write(new RequestDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
-        var receitaResponse = jsonResponse.write(new ResponseDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
+        var receitaSalva = repository.save(new Receita("celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
+        var dadosAtualizarReceita = new RequestDTO("celularAtualizado", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.OUTRAS);
 
         //mock
         var response = mvc.perform(
-                        MockMvcRequestBuilders.post("/receitas")
+                        MockMvcRequestBuilders.put("/receitas/" + receitaSalva.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(receitaRequest.getJson())
-                ).andReturn()
+                                .content(requestDTOJson.write(dadosAtualizarReceita).getJson()
+                                )
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getContentAsString()).isEqualTo(receitaResponse.getJson());
+        var jsonEsperado = requestDTOJson.write(dadosAtualizarReceita).getJson();
+
+        assertThat(response.getContentAsString()).isEqualTo(jsonEsperado);
+
+
     }
 }

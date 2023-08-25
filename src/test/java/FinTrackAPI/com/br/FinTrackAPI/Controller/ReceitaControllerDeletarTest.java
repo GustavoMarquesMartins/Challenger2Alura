@@ -1,58 +1,56 @@
 package FinTrackAPI.com.br.FinTrackAPI.Controller;
 
-import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Repository.ReceitaRepository;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@AutoConfigureJsonTesters
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
-class ReceitaControllerListagemAnoMesTest {
+@SpringBootTest
+class ReceitaControllerDeletarTest {
 
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    @Autowired
     private ReceitaRepository repository;
 
     @Test
-    @DisplayName("deveria retornar lista com todas as receitas do ano e mes passados na url")
-    void listagemAnoMes() throws Exception {
+    void deletar() throws Exception {
 
-        int ano = 2023;
-        int mes = 12;
+        //var
+        var receitaSalva = repository.save(new Receita("celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
 
-        var lista = mvc.perform(MockMvcRequestBuilders
-                        .get("/receitas/" + ano + "/" + mes)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray());
+        //mock
+        var response = mvc.perform(
+                        MockMvcRequestBuilders.delete("/receitas/" + receitaSalva.getId())
+                )
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andReturn()
+                .getResponse();
 
-        Mockito.verify(repository).findByData(ano,mes);
+        assertThat(repository.findById(receitaSalva.getId())).isEqualTo(Optional.empty());
+
     }
 }

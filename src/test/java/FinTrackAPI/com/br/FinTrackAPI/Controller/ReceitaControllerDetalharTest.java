@@ -3,6 +3,9 @@ package FinTrackAPI.com.br.FinTrackAPI.Controller;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
 import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Repository.ReceitaRepository;
+import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -18,42 +21,42 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @AutoConfigureJsonTesters
 @AutoConfigureMockMvc
 @SpringBootTest
-class ReceitaControllerSalvarTest {
+class ReceitaControllerDetalharTest {
 
     @Autowired
-    private JacksonTester<RequestDTO> jsonRequest;
-
-    @Autowired
-    private JacksonTester<ResponseDTO> jsonResponse;
+    private ReceitaServico servico;
 
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private JacksonTester<ResponseDTO> responseJson;
+
+    @Autowired
+    private ReceitaRepository repository;
     @Test
-    void salvar() throws Exception {
+    void detalhar() throws Exception {
 
         //var
-        var receitaRequest = jsonRequest.write(new RequestDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
-        var receitaResponse = jsonResponse.write(new ResponseDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
+        var receitaSalva = repository.save(new Receita("celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
+        var jsonEsperado = responseJson.write(servico.detalhar(receitaSalva.getId()));
 
         //mock
         var response = mvc.perform(
-                        MockMvcRequestBuilders.post("/receitas")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(receitaRequest.getJson())
+                        MockMvcRequestBuilders.get("/receitas/" + receitaSalva.getId())
                 ).andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getContentAsString()).isEqualTo(receitaResponse.getJson());
+        assertThat(response.getContentAsString()).isEqualTo(jsonEsperado.getJson());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }
