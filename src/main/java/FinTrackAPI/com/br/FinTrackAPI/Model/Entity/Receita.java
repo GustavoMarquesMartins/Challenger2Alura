@@ -19,10 +19,15 @@ public class Receita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String descricao;
+
     private BigDecimal valor;
+
     private LocalDate data;
+
     @Enumerated(EnumType.STRING)
+
     private Categoria categoria;
 
     public void atualizar(RequestDTO requestDTO) {

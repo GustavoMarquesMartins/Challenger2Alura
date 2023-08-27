@@ -1,10 +1,9 @@
 package FinTrackAPI.com.br.FinTrackAPI.Controller;
 
 import FinTrackAPI.com.br.FinTrackAPI.DTO.RequestDTO;
-import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
-import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
-import FinTrackAPI.com.br.FinTrackAPI.Model.Repository.ReceitaRepository;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Despesa;
+import FinTrackAPI.com.br.FinTrackAPI.Model.Repository.DespesasRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,13 +27,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 @SpringBootTest
-class ReceitaControllerAtualizarTest {
+class DespesaControllerAtualizarTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
-    private ReceitaRepository repository;
+    private DespesasRepository repository;
 
     @Autowired
     private JacksonTester<RequestDTO> requestDTOJson;
@@ -44,21 +42,21 @@ class ReceitaControllerAtualizarTest {
     void deletar() throws Exception {
 
         //var
-        var receitaSalva = repository.save(new Receita("celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
-        var dadosAtualizarReceita = new RequestDTO("celularAtualizado", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.OUTRAS);
+        var despesaSalva = repository.save(new Despesa(null,"celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
+        var dadosAtualizardespesa = new RequestDTO("celularAtualizado", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.OUTRAS);
 
         //mock
         var response = mvc.perform(
-                        MockMvcRequestBuilders.put("/receitas/" + receitaSalva.getId())
+                        MockMvcRequestBuilders.put("/despesas/" + despesaSalva.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestDTOJson.write(dadosAtualizarReceita).getJson()
+                                .content(requestDTOJson.write(dadosAtualizardespesa).getJson()
                                 )
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn()
                 .getResponse();
 
-        var jsonEsperado = requestDTOJson.write(dadosAtualizarReceita).getJson();
+        var jsonEsperado = requestDTOJson.write(dadosAtualizardespesa).getJson();
 
         assertThat(response.getContentAsString()).isEqualTo(jsonEsperado);
     }

@@ -27,9 +27,15 @@ public class TratamentoException {
     public ResponseEntity error404(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
     @ResponseStatus
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity error404(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("A categoria não conrresponde a um padrão esperado");
+    }
+    @ResponseStatus
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity error500(NullPointerException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

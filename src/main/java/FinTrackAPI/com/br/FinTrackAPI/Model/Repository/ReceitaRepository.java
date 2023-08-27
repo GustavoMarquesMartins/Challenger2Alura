@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface ReceitaRepository extends JpaRepository<Receita, Long> {
 
     @Query("SELECT SUM(D.valor) FROM Receita D WHERE YEAR(D.data) = :ano AND  MONTH(D.data) = :mes")
     BigDecimal somaTotalReceitas(Integer ano, Integer mes);
+
+    @Query("SELECT r.data FROM Receita r")
+    List<LocalDate> findAllByData();
+
 }

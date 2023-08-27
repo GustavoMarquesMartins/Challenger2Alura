@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +27,8 @@ public interface DespesasRepository extends JpaRepository<Despesa, Long> {
 
     @Query("SELECT D.categoria,SUM(D.valor) as valor_total FROM Despesa D WHERE YEAR(D.data) = :ano AND  MONTH(D.data) = :mes GROUP BY D.categoria ")
     List<Object[]> valorGastoPorCategoria(Integer ano, Integer mes);
+
+    @Query("SELECT d.data FROM Despesa d")
+    List<LocalDate> findAllByData();
+
 }
