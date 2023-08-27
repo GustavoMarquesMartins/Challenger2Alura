@@ -5,6 +5,8 @@ import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Categoria;
 import FinTrackAPI.com.br.FinTrackAPI.Model.Entity.Receita;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/receitas")
+@SecurityRequirement(name = "bearer-key")
 public class ReceitaController {
 
     private ReceitaServico receitaServico;
@@ -28,7 +31,7 @@ public class ReceitaController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> salvar(@RequestBody RequestDTO requestDTO, UriComponentsBuilder uriBuilder) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity<ResponseDTO> salvar(@RequestBody @Valid RequestDTO requestDTO, UriComponentsBuilder uriBuilder) throws SQLIntegrityConstraintViolationException {
         var receita = receitaServico.salvar(requestDTO);
         var uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseDTO(receita));
@@ -53,7 +56,7 @@ public class ReceitaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ResponseDTO> atualizar(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
+    public ResponseEntity<ResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid RequestDTO requestDTO) {
         return ResponseEntity.ok().body(receitaServico.atualizar(id, requestDTO));
     }
 

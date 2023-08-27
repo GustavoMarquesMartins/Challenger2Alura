@@ -13,7 +13,10 @@ import java.time.LocalDate;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record RequestDTO(@NotBlank String descricao, @NotNull BigDecimal valor,
-                         @NotNull @Future @JsonFormat(pattern = "dd/MM/yyyy") LocalDate data,
+                         @NotNull
+                         @Future(message = "A data deve ser no futuro.")
+                         @JsonFormat(pattern = "dd/MM/yyyy", timezone = "UTC")
+                         LocalDate data,
                          Categoria categoria) {
     public RequestDTO(RequestDTO requestDTO) {
         this(requestDTO.descricao, requestDTO.valor, requestDTO.data, Categoria.OUTRAS);

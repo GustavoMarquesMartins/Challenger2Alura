@@ -39,20 +39,20 @@ public class DespesaServico {
     }
 
     public ResponseDTO detalhar(long id) {
-        var despesa = despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        var despesa = despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Despesa com o id : " + id + " não encontrado"));
         return new ResponseDTO(despesa);
     }
 
     @Transactional
     public ResponseDTO atualizar(Long id, RequestDTO requestDTO) {
-        var despesa = despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        var despesa = despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Despesa com o id : " + id + " não encontrado"));
         despesa.atualizar(requestDTO);
         return new ResponseDTO(despesa);
     }
 
     @Transactional
     public void deletar(Long id) {
-        despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        despesasRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Despesa com o id : " + id + " não encontrado"));
         despesasRepository.deleteById(id);
     }
 

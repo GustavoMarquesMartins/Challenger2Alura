@@ -44,7 +44,7 @@ class ResumoControllerTest {
 
 
     @Test
-    void listagem() throws Exception {
+    void resumoAnoMes() throws Exception {
 
         //ano e mes
         var data = getDataAleatoriaQueReceitaEDespesasTenhamEmComun();
@@ -70,7 +70,9 @@ class ResumoControllerTest {
         Random random = new Random();
         boolean status = false;
         List<LocalDate> listaReceitaDatas = receitaRepository.findAllByData();
+
         List<LocalDate> listaDespesasDatas = despesasRepository.findAllByData();
+
         LocalDate resultadoEsperado = null;
         while (status != true) {
             var posicaoAleatoriaReceita = random.nextInt(listaReceitaDatas.size());

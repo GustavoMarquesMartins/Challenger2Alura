@@ -5,6 +5,7 @@ import FinTrackAPI.com.br.FinTrackAPI.DTO.ResponseResumoDTO;
 import FinTrackAPI.com.br.FinTrackAPI.Service.DespesaServico;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ReceitaServico;
 import FinTrackAPI.com.br.FinTrackAPI.Service.ResumoServico;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/resumo")
+@SecurityRequirement(name = "bearer-key")
 public class ResumoController {
 
     @Autowired

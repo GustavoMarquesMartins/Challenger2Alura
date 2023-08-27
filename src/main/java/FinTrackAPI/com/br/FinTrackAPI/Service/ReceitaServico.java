@@ -42,24 +42,24 @@ public class ReceitaServico {
     }
 
     public List<ResponseDTO> listagemPorCategoria(Categoria categoria) {
-        return  receitaRepository.findAllByCategoria(categoria).stream().map(ResponseDTO::new).collect(Collectors.toList());
+        return receitaRepository.findAllByCategoria(categoria).stream().map(ResponseDTO::new).collect(Collectors.toList());
     }
 
     public ResponseDTO detalhar(long id) {
-        var receita = receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        var receita = receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Receita com o id : \" + id + \" não encontrado\""));
         return new ResponseDTO(receita);
     }
 
     @Transactional
     public ResponseDTO atualizar(Long id, RequestDTO requestDTO) {
-        var receita = receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        var receita = receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Receita com o id : " + id + " não encontrado"));
         receita.atualizar(requestDTO);
         return new ResponseDTO(receita);
     }
 
     @Transactional
     public void deletar(Long id) {
-        receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Valor não encontrado"));
+        receitaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Receita com o id : " + id + " não encontrado"));
         receitaRepository.deleteById(id);
     }
 
