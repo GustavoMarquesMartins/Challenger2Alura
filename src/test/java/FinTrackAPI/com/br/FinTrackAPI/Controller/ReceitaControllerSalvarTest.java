@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,11 +40,12 @@ class ReceitaControllerSalvarTest {
     private MockMvc mvc;
 
     @Test
+    @WithMockUser
     void salvar() throws Exception {
 
         //var
-        var receitaRequest = jsonRequest.write(new RequestDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
-        var receitaResponse = jsonResponse.write(new ResponseDTO("aCelulara", new BigDecimal("1000.00"), LocalDate.now(), Categoria.LAZER));
+        var receitaRequest = jsonRequest.write(new RequestDTO("geladeira", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.LAZER));
+        var receitaResponse = jsonResponse.write(new ResponseDTO("geladeira", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.LAZER));
 
         //mock
         var response = mvc.perform(

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,6 +45,7 @@ class ResumoControllerTest {
 
 
     @Test
+    @WithMockUser
     void resumoAnoMes() throws Exception {
 
         //ano e mes
@@ -75,8 +77,16 @@ class ResumoControllerTest {
 
         LocalDate resultadoEsperado = null;
         while (status != true) {
+
             var posicaoAleatoriaReceita = random.nextInt(listaReceitaDatas.size());
             var posicaoAleatoriaDespesas = random.nextInt(listaDespesasDatas.size());
+
+            if (posicaoAleatoriaReceita == 0) {
+                posicaoAleatoriaReceita = posicaoAleatoriaReceita + 1;
+            }
+            if (posicaoAleatoriaDespesas == 0) {
+                posicaoAleatoriaDespesas = posicaoAleatoriaDespesas + 1;
+            }
 
             LocalDate dataAleatoriaReceita = listaReceitaDatas.get(posicaoAleatoriaReceita);
             LocalDate dataAleatoriaDespesa = listaDespesasDatas.get(posicaoAleatoriaDespesas);

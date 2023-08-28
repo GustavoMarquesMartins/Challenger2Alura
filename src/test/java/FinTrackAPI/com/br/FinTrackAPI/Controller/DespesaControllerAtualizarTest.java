@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,11 +40,12 @@ class DespesaControllerAtualizarTest {
     private JacksonTester<RequestDTO> requestDTOJson;
 
     @Test
-    void deletar() throws Exception {
+    @WithMockUser
+    void atualizar() throws Exception {
 
         //var
-        var despesaSalva = repository.save(new Despesa(null,"celular", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
-        var dadosAtualizardespesa = new RequestDTO("celularAtualizado", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.OUTRAS);
+        var despesaSalva = repository.save(new Despesa(null, "tablete ", new BigDecimal("12.00"), LocalDate.now(), Categoria.LAZER));
+        var dadosAtualizardespesa = new RequestDTO("tablete", new BigDecimal("1000.00"), LocalDate.now().plusDays(2), Categoria.OUTRAS);
 
         //mock
         var response = mvc.perform(
